@@ -1,0 +1,25 @@
+name: 'Setup Flutter with fvm and cache'
+description: 'Setup Flutter for all platforms with fvm and cache'
+
+env:
+  FLUTTER_VERSION: ""
+  FLUTTER_CHANNEL: ""
+  FLUTTER_HOME: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get fvm version
+      uses: kuhnroyal/flutter-fvm-config-action@v3
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: ${{ env.FLUTTER_CHANNEL }}
+        cache: true
+    - name: Cache pub dependencies
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.FLUTTER_HOME }}/.pub-cache
+        key: ${{ runner.os }}-pub-${{ hashFiles('pubspec.yaml') }}
+        restore-keys: ${{ runner.os }}-pub
